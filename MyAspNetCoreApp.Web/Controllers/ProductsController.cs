@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
 
@@ -9,12 +10,12 @@ namespace MyAspNetCoreApp.Web.Controllers
 
         private AppDbContext _Context;
         private readonly ProductRepository _productRepository;
-        private IHelper _helper;
-        public ProductsController(AppDbContext context, IHelper helper)
+        //private IHelper _helper;
+        public ProductsController(AppDbContext context/*, IHelper helper*/)
         {
             _productRepository = new ProductRepository();
             _Context = context;
-            _helper = helper;
+            //_helper = helper;
 
             //if (!_Context.Products.Any())
             //{
@@ -28,11 +29,13 @@ namespace MyAspNetCoreApp.Web.Controllers
 
 
         }
-        public IActionResult Index([FromServices] IHelper helper2)
+        public IActionResult Index(/*[FromServices] IHelper*/ /*helper2*/)
         {
-            var text = "asp net";
-            var UpperText = _helper.Upper(text);
-            var status = _helper.Equals(helper2);
+
+
+            //var text = "asp net";
+            //var UpperText = _helper.Upper(text);
+            //var status = _helper.Equals(helper2);
 
             var products = _Context.Products.ToList();
 
@@ -52,6 +55,25 @@ namespace MyAspNetCoreApp.Web.Controllers
         public IActionResult Add()
         {
 
+             
+            ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 Ay",1},
+                {"3 Ay",3},
+                {"6 Ay",6},
+                {"12 Ay",12},
+
+            };
+
+            ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data="Mavi", Value="Mavi"},
+                new(){Data="Kırmızı", Value="Kırmızı"},
+                new(){Data="Siyah", Value="Siyah"},
+                new(){Data="Beyaz", Value="Beyaz" }
+
+            },"Value","Data");
+
             return View();
         }
 
@@ -68,6 +90,24 @@ namespace MyAspNetCoreApp.Web.Controllers
         public IActionResult Update(int id)
         {
             var product = _Context.Products.Find(id);
+            ViewBag.ExpireValue = product.Expire;
+            ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 Ay",1},
+                {"3 Ay",3},
+                {"6 Ay",6},
+                {"12 Ay",12},
+
+            };
+
+            ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data="Mavi", Value="Mavi"},
+                new(){Data="Kırmızı", Value="Kırmızı"},
+                new(){Data="Siyah", Value="Siyah"},
+                new(){Data="Beyaz", Value="Beyaz" }
+
+            }, "Value", "Data",product.Color);
             return View(product);
         }
         [HttpPost]

@@ -7,16 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddSingleton<IHelper,Helper>();
-//builder.Services.AddScoped<IHelper,Helper>();
-builder.Services.AddTransient<IHelper,Helper>(sp=>
-{ 
-return new Helper(true);
-}
+//builder.Services.AddSingleton<IHelper, Helper>();
+//builder.Services.AddScoped<IHelper, Helper>();
+//builder.Services.AddTransient<IHelper, Helper>(sp =>
+//{
+//    return new Helper(true);
+//}
 
 
-);
-//builder.Services.AddScoped<Helper>();
+//);
+builder.Services.AddScoped<Helper>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>

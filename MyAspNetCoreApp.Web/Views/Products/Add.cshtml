@@ -1,19 +1,62 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Add";
 
 }
 @model Product
 <form asp-controller="Products" asp-action="SaveProducts" method="post">
 
-    <label>Ürün Adı</label>
-    <input type="text" asp-for="Name"/><br />
-    <label>Ürün Fiyatı</label>
-    <input type="text" asp-for="Price" /><br />
-    <label>Ürün Stok</label>
-    <input type="text" asp-for="Stock" /><br />
-    <label>Ürün Renk</label>
-    <input type="text" asp-for="Color" /><br />
-    <button type="submit">Gönder</button>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Ürün Adı</label>
+        <input asp-for="Name" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Example textarea</label>
+            <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Ürün Fiyatı</label>
+        <input asp-for="Price" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label asp-for="Stock" class="form-label">Ürün Stok</label>
+        <input asp-for="Stock" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label asp-for="Color" class="form-label">Ürün Renk</label>
+        <select asp-for="Color" asp-items="@ViewBag.ColorSelect">
+            <option value="">Seçiniz</option>
+        </select>
+       @* <input asp-for="Color" class="form-control">*@
+    </div>
+
+    <div class="form-control form-check">
+        <input class="form-check-input" asp-for="IsPublish">
+        <label class="form-check-label" asp-for="IsPublish">
+            Yayın Durumu
+        </label>
+    </div>
+    <div class="mb-3 mt-3">
+        <label>Satş Süresi</label>
+        @foreach (var item in ViewBag.Expire as Dictionary<string, int>)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="Expire" id="(@item.Value)Expire" value="@item.Value">
+                <label class="form-check-label" for="(@item.Value)Expire">
+                    @item.Key
+                </label>
+            </div>
+        }
+    </div>
+    <div class="mb-3">
+        <label asp-for="PublishDate" class="form-label">Yayınlanma Tarihi</label>
+        <input asp-for="PublishDate" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Gönder</button>
+
+
+
 
 </form>
