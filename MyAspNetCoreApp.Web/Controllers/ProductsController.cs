@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
+using MyAspNetCoreApp.Web.ViewModel;
 
 namespace MyAspNetCoreApp.Web.Controllers
 {
@@ -11,10 +13,13 @@ namespace MyAspNetCoreApp.Web.Controllers
         private AppDbContext _Context;
         private readonly ProductRepository _productRepository;
         //private IHelper _helper;
-        public ProductsController(AppDbContext context/*, IHelper helper*/)
+        private readonly IMapper _mapper;
+
+        public ProductsController(AppDbContext context , IMapper mapper/*, IHelper helper*/)
         {
             _productRepository = new ProductRepository();
             _Context = context;
+            _mapper = mapper;
             //_helper = helper;
 
             //if (!_Context.Products.Any())
@@ -39,7 +44,7 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             var products = _Context.Products.ToList();
 
-            return View(products);
+            return View(_mapper.Map<List<ProductViewModel>>(products));
         }
 
         public IActionResult Remove(int id)
@@ -51,6 +56,7 @@ namespace MyAspNetCoreApp.Web.Controllers
             return RedirectToAction("Index");
 
         }
+
 
         public IActionResult Add()
         {
@@ -78,12 +84,38 @@ namespace MyAspNetCoreApp.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveProducts(Product newProduct)
+        public IActionResult Add(ProductViewModel newProduct)
         {
-            _Context.Products.Add(newProduct);
-            _Context.SaveChanges();
-            TempData["Status"] = "Eklendi";
-            return RedirectToAction("Index");
+            if(ModelState.IsValid)
+            {
+                _Context.Products.Add(_mapper.Map<Product>(newProduct));
+                _Context.SaveChanges();
+                TempData["Status"] = "Eklendi";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 Ay",1},
+                {"3 Ay",3},
+                {"6 Ay",6},
+                {"12 Ay",12},
+
+            };
+
+                ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data="Mavi", Value="Mavi"},
+                new(){Data="Kırmızı", Value="Kırmızı"},
+                new(){Data="Siyah", Value="Siyah"},
+                new(){Data="Beyaz", Value="Beyaz" }
+
+            }, "Value", "Data");
+                return View();
+            }
+           
+           
         }
 
         [HttpGet]

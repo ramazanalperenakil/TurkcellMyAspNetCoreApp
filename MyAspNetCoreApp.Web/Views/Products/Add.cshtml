@@ -2,12 +2,13 @@
     ViewData["Title"] = "Add";
 
 }
-@model Product
-<form asp-controller="Products" asp-action="SaveProducts" method="post">
+@model ProductViewModel
+<form asp-controller="Products" asp-action="Add" method="post">
 
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Ürün Adı</label>
         <input asp-for="Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

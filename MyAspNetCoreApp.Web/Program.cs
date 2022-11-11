@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddControllersWithViews();
 
 //);
 builder.Services.AddScoped<Helper>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
