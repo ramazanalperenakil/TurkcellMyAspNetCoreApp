@@ -86,16 +86,13 @@ namespace MyAspNetCoreApp.Web.Controllers
         [HttpPost]
         public IActionResult Add(ProductViewModel newProduct)
         {
-            if(ModelState.IsValid)
-            {
-                _Context.Products.Add(_mapper.Map<Product>(newProduct));
-                _Context.SaveChanges();
-                TempData["Status"] = "Eklendi";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                ViewBag.Expire = new Dictionary<string, int>()
+
+            //if (!string.IsNullOrEmpty(newProduct.Name) && newProduct.Name.StartsWith("A"))
+            //{
+            //    ModelState.AddModelError(string.Empty, "A ile Olmaz");
+            //}
+
+            ViewBag.Expire = new Dictionary<string, int>()
             {
                 {"1 Ay",1},
                 {"3 Ay",3},
@@ -104,7 +101,7 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             };
 
-                ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
             {
                 new(){Data="Mavi", Value="Mavi"},
                 new(){Data="Kırmızı", Value="Kırmızı"},
@@ -112,6 +109,32 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data="Beyaz", Value="Beyaz" }
 
             }, "Value", "Data");
+             
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _Context.Products.Add(_mapper.Map<Product>(newProduct));
+                    _Context.SaveChanges();
+                    TempData["Status"] = "Eklendi";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception error)
+                {
+                    
+                        ModelState.AddModelError(string.Empty, "Ürün Kaydedirken Hata Oldu ");
+                    
+
+                    throw;
+                }
+            }
+            else
+            {
+
+               
+
+              
                 return View();
             }
            
@@ -140,16 +163,56 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data="Beyaz", Value="Beyaz" }
 
             }, "Value", "Data",product.Color);
-            return View(product);
+            return View(_mapper.Map<ProductViewModel>(product));
         }
         [HttpPost]
-        public IActionResult Update(Product p)
+        public IActionResult Update(ProductViewModel p)
         {
-            _Context.Update(p);
+            
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Expire = new Dictionary<string, int>()
+            {
+                {"1 Ay",1},
+                {"3 Ay",3},
+                {"6 Ay",6},
+                {"12 Ay",12},
+
+            };
+
+                ViewBag.ColorSelect = new SelectList(new List<ColorSelectList>()
+            {
+                new(){Data="Mavi", Value="Mavi"},
+                new(){Data="Kırmızı", Value="Kırmızı"},
+                new(){Data="Siyah", Value="Siyah"},
+                new(){Data="Beyaz", Value="Beyaz" }
+
+            }, "Value", "Data");
+                return View();
+            }
+            _Context.Update(_mapper.Map<Product>(p));
             _Context.SaveChanges();
             TempData["Status"] = "Güncellendi";
 
             return RedirectToAction("Index");
+        }
+
+        [AcceptVerbs("Get","Post")]
+        public IActionResult HasProductName(string Name) 
+        {
+            var anyProducy = _Context.Products.Any(x => x.Name.ToLower() == Name.ToLower());
+            if (anyProducy)
+            {
+                return Json("Ürün Vardır");
+
+            }
+            else
+            {
+                return Json(true);
+            }
+        
+        
         }
     }
 }
