@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "GetById";
+}
+@model ProductViewModel
+<div class="card">
+    <h5 class="card-header">@Model.Name</h5>
+    <div class="card-body">
+         
+        <p class="card-text">Id : @Model.Id</p>
+        <p class="card-text">Açıklama : @Model.Description</p>
+        <p class="card-text">fiyat : @Model.Price</p>
+        <p class="card-text">stok : @Model.Stock</p>
+        <p class="card-text">renk : @Model.Color</p>
+        <p class="card-text">süre : @Model.Expire</p>
+         
+    </div>
+</div>
+

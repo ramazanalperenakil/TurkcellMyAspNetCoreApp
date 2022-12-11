@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyAspNetCoreApp.Web.Models;
 using MyAspNetCoreApp.Web.ViewModel;
+using System.Xml.Linq;
 
 namespace MyAspNetCoreApp.Web.Views.Shared.ViewComponents
 {
@@ -14,6 +15,7 @@ namespace MyAspNetCoreApp.Web.Views.Shared.ViewComponents
             _Context = context;
         }
 
+       
         public async Task<IViewComponentResult> InvokeAsyc() 
         {
             var viewmodels = _Context.Products.Select(x => new ProductListComponentViewModel()

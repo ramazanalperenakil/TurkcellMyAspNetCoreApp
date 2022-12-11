@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCoreApp.Web.Helpers;
 using MyAspNetCoreApp.Web.Models;
 using MyAspNetCoreApp.Web.ViewModel;
+using System.Xml.Linq;
 
 namespace MyAspNetCoreApp.Web.Controllers
 {
+     
     public class ProductsController : Controller
     {
 
@@ -15,7 +17,7 @@ namespace MyAspNetCoreApp.Web.Controllers
         //private IHelper _helper;
         private readonly IMapper _mapper;
 
-        public ProductsController(AppDbContext context , IMapper mapper/*, IHelper helper*/)
+        public ProductsController(AppDbContext context, IMapper mapper/*, IHelper helper*/)
         {
             _productRepository = new ProductRepository();
             _Context = context;
@@ -34,6 +36,10 @@ namespace MyAspNetCoreApp.Web.Controllers
 
 
         }
+
+        [Route("")]
+        [Route("Home")]
+        [Route("Home/Index")]
         public IActionResult Index(/*[FromServices] IHelper*/ /*helper2*/)
         {
 
@@ -46,6 +52,7 @@ namespace MyAspNetCoreApp.Web.Controllers
 
             return View(_mapper.Map<List<ProductViewModel>>(products));
         }
+
 
         public IActionResult Remove(int id)
         {
@@ -61,7 +68,7 @@ namespace MyAspNetCoreApp.Web.Controllers
         public IActionResult Add()
         {
 
-             
+
             ViewBag.Expire = new Dictionary<string, int>()
             {
                 {"1 Ay",1},
@@ -78,7 +85,7 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data="Siyah", Value="Siyah"},
                 new(){Data="Beyaz", Value="Beyaz" }
 
-            },"Value","Data");
+            }, "Value", "Data");
 
             return View();
         }
@@ -109,7 +116,7 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data="Beyaz", Value="Beyaz" }
 
             }, "Value", "Data");
-             
+
 
             if (ModelState.IsValid)
             {
@@ -122,9 +129,9 @@ namespace MyAspNetCoreApp.Web.Controllers
                 }
                 catch (Exception error)
                 {
-                    
-                        ModelState.AddModelError(string.Empty, "Ürün Kaydedirken Hata Oldu ");
-                    
+
+                    ModelState.AddModelError(string.Empty, "Ürün Kaydedirken Hata Oldu ");
+
 
                     throw;
                 }
@@ -132,13 +139,13 @@ namespace MyAspNetCoreApp.Web.Controllers
             else
             {
 
-               
 
-              
+
+
                 return View();
             }
-           
-           
+
+
         }
 
         [HttpGet]
@@ -162,13 +169,13 @@ namespace MyAspNetCoreApp.Web.Controllers
                 new(){Data="Siyah", Value="Siyah"},
                 new(){Data="Beyaz", Value="Beyaz" }
 
-            }, "Value", "Data",product.Color);
+            }, "Value", "Data", product.Color);
             return View(_mapper.Map<ProductViewModel>(product));
         }
         [HttpPost]
         public IActionResult Update(ProductViewModel p)
         {
-            
+
 
             if (!ModelState.IsValid)
             {
@@ -198,8 +205,8 @@ namespace MyAspNetCoreApp.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [AcceptVerbs("Get","Post")]
-        public IActionResult HasProductName(string Name) 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult HasProductName(string Name)
         {
             var anyProducy = _Context.Products.Any(x => x.Name.ToLower() == Name.ToLower());
             if (anyProducy)
@@ -211,8 +218,36 @@ namespace MyAspNetCoreApp.Web.Controllers
             {
                 return Json(true);
             }
-        
-        
+
+
+        }
+
+
+        [Route("[controller]/[action]/{productid}")]
+        public IActionResult GetById(int productid)
+        {
+            var products = _Context.Products.Find(productid);
+            return View(_mapper.Map<ProductViewModel>(products));
+
+
+
+        }
+
+
+        [Route("[controller]/[action]/{page}/{pageSize}")]
+        public IActionResult Pages(int page,int pageSize)
+        {
+            var products = _Context.Products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+
+
+            ViewBag.page = page;
+            ViewBag.pageSize = pageSize;
+
+             
+            return View(_mapper.Map<List<ProductViewModel>>(products));
+
+
+
         }
     }
 }

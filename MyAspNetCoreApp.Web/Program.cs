@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MyAspNetCoreApp.Web.Helpers;
@@ -44,9 +45,29 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//app.MapControllerRoute(
+//    name: "article",
+//    pattern: "{controller=Blog}/{action=Article}/{name}/{id}");
+//app.MapControllerRoute(
+//    name: "blog",
+//pattern: "blog/{*article}",
+//    defaults: new { controller = "Blog", Action="Article" });
+
+
+//app.MapControllerRoute(
+//    name: "productpages",
+//    pattern: "{controller=Products}/{action=pages}/{page}/{pageSize}");
+
+
+//app.MapControllerRoute(
+//    name: "productgetbyid",
+//    pattern: "{controller=Products}/{action=GetById}/{productid}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 //baseUrl/ürünler/kalem/1
 // baseUrl/home/index

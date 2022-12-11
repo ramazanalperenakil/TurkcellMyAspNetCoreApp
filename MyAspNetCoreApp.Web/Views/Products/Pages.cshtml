@@ -1,13 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿
+@{
+    ViewData["Title"] = "Pages";
 }
+
+<h1>Pages</h1>
+<h1>Page : @ViewBag.page</h1>
+<h1>PageSize : @ViewBag.pageSize</h1>
 @model List<ProductViewModel>
-<h1>Ürünler</h1>
-@if (TempData["Status"] != null)
-{
-    <h1>Ok</h1>
-}
-<a asp-controller="products" asp-action="add">  Ürün ekle</a>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -17,8 +18,8 @@
             <th>Stok</th>
             <th>Renk</th>
             <th>Açıklama</th>
-             
-           
+
+
             <th>Satış Süresi</th>
             <th>Yayın Durumu</th>
             <th>İşlem</th>
@@ -36,7 +37,7 @@
                 <td>@item.Stock</td>
                 <td>@item.Color</td>
                 <td>
-                    @if (@item.Description.Length<=20)
+                    @if (@item.Description.Length <= 20)
                     {
                         @item.Description.Length
                     }
@@ -44,22 +45,22 @@
                     {
                         @item.Description.Substring(0,20) <label>...</label>
                     }
-                    
-                    </td>
+
+                </td>
                 <td>@item.Expire Ay</td>
                 <td>
                     @if (@item.IsPublish)
                     {
                         <label>evet</label>
-                         
+
                     }
                     else
                     {
                         <label>hayır</label>
 
                     }
-                    </td>
-               
+                </td>
+
 
                 <td>
                     <a asp-controller="products" asp-action="remove" asp-route-id="@item.Id">Sil</a>
@@ -74,7 +75,3 @@
 
 
 </table>
-
-
-<a asp-controller="Products" asp-action="Pages" asp-route-page=1 asp-route-pageSize =3>1 Sayfadan 3 ürün</a>
-<a asp-controller="Products" asp-action="Pages" asp-route-page=2 asp-route-pageSize =2>2 Sayfadan 3 ürün</a>

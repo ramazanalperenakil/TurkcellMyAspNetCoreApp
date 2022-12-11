@@ -5,7 +5,7 @@ using MyAspNetCoreApp.Web.ViewModel;
 using System.Diagnostics;
 
 namespace MyAspNetCoreApp.Web.Controllers
-{
+{ 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
